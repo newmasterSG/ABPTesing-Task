@@ -1,0 +1,5 @@
+﻿CREATE TABLE [dbo].[Experiments]
+(
+	[Id] INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
+	[Name] NVARCHAR(250) NULL 
+)

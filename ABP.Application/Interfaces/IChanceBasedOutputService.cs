@@ -8,6 +8,6 @@ namespace ABP.Application.Interfaces
 {
     public interface IChanceBasedOutputService
     {
-        string GetRandomValue(Dictionary<string, double> pairs);
+        string GetRandomValue<TKey, TValue>(Dictionary<TKey, TValue> pairs) where TValue : struct;
     }
 }

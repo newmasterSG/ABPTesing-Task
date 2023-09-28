@@ -1,3 +1,8 @@
+using ABP.Application.Interfaces;
+using ABP.Application.Services;
+using ABP.Domain.Repository;
+using ABP.Infrastructure.Repository;
+
 namespace APB.API
 {
     public class Program
@@ -9,6 +14,28 @@ namespace APB.API
             // Add services to the container.
 
             builder.Services.AddControllers();
+
+            ConfigurationManager configuration = builder.Configuration;
+
+            builder.Services.AddSingleton<IDeviceRepository, DeviceRepository>(sp => {
+                return new DeviceRepository(configuration.GetConnectionString("DefaultConnection"));
+            });
+            builder.Services.AddSingleton<IExperimentRepository, ExperimentRepository>(sp => {
+                return new ExperimentRepository(configuration.GetConnectionString("DefaultConnection"));
+            });
+            builder.Services.AddSingleton<IChanceBasedOutputService, ChanceBasedOutputService>();
+            builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder.AllowAnyOrigin()
+                           .AllowAnyMethod()
+                           .AllowAnyHeader();
+                });
+            });
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();

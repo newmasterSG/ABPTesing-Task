@@ -4,9 +4,15 @@ namespace ABP.Application.Services
 {
     public class ChanceBasedOutputService : IChanceBasedOutputService
     {
-        public string GetRandomValue(Dictionary<string, double> pairs)
+        public string GetRandomValue<TKey, TValue>(Dictionary<TKey, TValue> pairs) where TValue : struct
         {
-            double totalProbability = pairs.Values.Sum();
+            double totalProbability = 0;
+
+            if (typeof(TValue) == typeof(IEnumerable<decimal>))
+            {
+                var valueList = pairs.Values;
+                totalProbability = (double)valueList.Cast<decimal>().Sum();
+            }
 
             if (totalProbability > 1)
                 throw new InvalidOperationException("The sum of probabilities can't be more then 1");
@@ -14,12 +20,18 @@ namespace ABP.Application.Services
             double randomNumber = new Random().NextDouble() * totalProbability;
 
             double cumulativeProbability = 0;
-            foreach (KeyValuePair<string, double> entry in pairs)
+            foreach (KeyValuePair<TKey, TValue> entry in pairs)
             {
-                cumulativeProbability += entry.Value;
-                if (randomNumber <= cumulativeProbability)
+                if (entry.Value is double value)
                 {
-                    return entry.Key;
+                    cumulativeProbability += value;
+                    if (randomNumber <= cumulativeProbability)
+                    {
+                        if(entry.Key is string str)
+                        {
+                            return str;
+                        }
+                    }
                 }
             }
 

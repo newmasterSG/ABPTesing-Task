@@ -1,0 +1,6 @@
+﻿CREATE TABLE [dbo].[PriceExperiment]
+(
+	Id INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
+	Price NVARCHAR(250) NULL,
+	Chance DECIMAL(5,2)  NULL, 
+);

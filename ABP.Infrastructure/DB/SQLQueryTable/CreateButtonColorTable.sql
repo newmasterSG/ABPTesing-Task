@@ -1,0 +1,6 @@
+﻿CREATE TABLE [dbo].[ButtonColor]
+(
+	Id INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
+	Color NVARCHAR(250) NULL,
+	Chance DECIMAL(5,2)  NULL, 
+);
